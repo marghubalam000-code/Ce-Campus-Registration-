@@ -1,13 +1,12 @@
-<!DOCTYPE html>
+<MARGHUBUR RAHMAN>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>CATALYST EDUCATIONAL CAMPUS EDUCATIONAL SYSTEM</title>
+<title>CE Campus Admission System</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-
 body{
 margin:0;
 font-family:'Segoe UI',sans-serif;
@@ -26,9 +25,7 @@ align-items:center;
 gap:10px;
 }
 
-.header img{
-height:50px;
-}
+.header img{height:50px;}
 
 .container{
 max-width:650px;
@@ -39,12 +36,7 @@ border-radius:15px;
 box-shadow:0 15px 40px rgba(0,0,0,0.4);
 }
 
-label{
-font-weight:bold;
-display:block;
-margin-top:10px;
-}
-
+label{font-weight:bold;display:block;margin-top:10px;}
 .star{color:red;}
 
 input,select{
@@ -88,7 +80,6 @@ border-radius:8px;
 font-size:12px;
 font-weight:bold;
 }
-
 </style>
 </head>
 
@@ -96,7 +87,7 @@ font-weight:bold;
 
 <div class="header">
 <img src="Ce.JPEG">
-🎓 CATALYST EDUCATIONAL CAMPUS - ADMISSION PORTAL
+🎓 CATALYST EDUCATIONAL CAMPUS - REGISTRATION PORTAL
 </div>
 
 <div class="container">
@@ -165,7 +156,7 @@ font-weight:bold;
 
 </div>
 
-<div class="design">Design by Marghubur Rahman</div>
+<div class="design">Web Design by Marghubur Rahman</div>
 
 <script>
 
@@ -185,7 +176,7 @@ document.getElementById("stream").addEventListener("change",function(){
 document.getElementById("subjectBox").style.display=this.value?"block":"none";
 });
 
-/* AADHAR FORMAT */
+/* AADHAR FORMAT + VALIDATION */
 document.getElementById("aadhar").addEventListener("input",function(e){
 let v=e.target.value.replace(/\D/g,"").substring(0,12);
 let f=v;
@@ -201,6 +192,12 @@ e.preventDefault();
 let file=document.getElementById("photo").files[0];
 if(!file){alert("Upload photo");return;}
 
+let aadhar=document.getElementById("aadhar").value.replace(/-/g,"");
+if(!/^\d{12}$/.test(aadhar)){
+alert("Invalid Aadhar Number");
+return;
+}
+
 let reader=new FileReader();
 
 reader.onload=function(e){
@@ -209,6 +206,9 @@ let photo=e.target.result;
 
 let data={
 name:document.getElementById("name").value,
+father:document.getElementById("father").value,
+mobile:document.getElementById("mobile").value,
+address:document.getElementById("address").value,
 class:document.getElementById("class").value,
 stream:document.getElementById("stream").value,
 subject:document.getElementById("subject").value,
@@ -222,10 +222,14 @@ document.getElementById("slip").innerHTML=`
 <div class="slip">
 
 <img src="Ce.JPEG" style="height:60px;"><br>
-<h2 style="color:#00c9ff;">CE CAMPUS SLIP</h2>
+<h2 style="color:#00c9ff;">CE CAMPUS REGISTRATION SLIP</h2>
 
 <p><b>Name:</b> ${data.name}</p>
+<p><b>Father:</b> ${data.father}</p>
 <p><b>Class:</b> ${data.class}</p>
+<p><b>Stream:</b> ${data.stream}</p>
+<p><b>Subject:</b> ${data.subject}</p>
+<p><b>Mobile:</b> ${data.mobile}</p>
 
 <img src="${photo}" style="width:120px;height:120px;border-radius:10px;border:2px solid #00c9ff;">
 
@@ -234,7 +238,7 @@ document.getElementById("slip").innerHTML=`
 
 </div>`;
 
-/* PDF */
+/* PROFESSIONAL PDF */
 const {jsPDF}=window.jspdf;
 let doc=new jsPDF();
 
@@ -243,19 +247,34 @@ logo.src="Ce.JPEG";
 
 logo.onload=function(){
 
+doc.setFillColor(0,201,255);
+doc.rect(0,0,220,40,"F");
+
 doc.addImage(logo,"JPEG",10,5,30,30);
 
 doc.setFontSize(20);
+doc.setTextColor(255,255,255);
 doc.text("CE CAMPUS",80,20);
 
-doc.rect(10,40,190,200);
+doc.setTextColor(0,0,0);
+doc.setFontSize(14);
+doc.text("ADMISSION CERTIFICATE",65,35);
 
-doc.text("Name: "+data.name,15,60);
-doc.text("Class: "+data.class,15,70);
+doc.rect(10,50,190,230);
 
-doc.addImage(photo,"JPEG",140,50,50,50);
+doc.setFontSize(12);
+doc.text("Name: "+data.name,20,70);
+doc.text("Father: "+data.father,20,80);
+doc.text("Class: "+data.class,20,90);
+doc.text("Stream: "+data.stream,20,100);
+doc.text("Subject: "+data.subject,20,110);
+doc.text("Mobile: "+data.mobile,20,120);
+doc.text("Address: "+data.address,20,130);
+doc.text("Date: "+data.date,20,140);
 
-doc.save(data.name+"_Certificate.pdf");
+doc.addImage(photo,"JPEG",140,60,50,50);
+
+doc.save(data.name+"_CE_Certificate.pdf");
 
 };
 

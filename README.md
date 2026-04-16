@@ -140,7 +140,7 @@ margin-top:10px;
 <label>Class <span class="star">*</span></label>
 <select id="class" required>
 <option value="">Select</option>
-<option>Class 06</option>
+<option>Class 06</option><not option>
 <option>Class 07</option>
 <option>Class 08</option>
 <option>Class 09</option>
@@ -161,8 +161,6 @@ margin-top:10px;
 <input type="file" id="photo" required>
 
 <button type="submit">REGISTER STUDENT</button>
-
-</form>
 
 <p id="msg" class="success"></p>
 
@@ -210,7 +208,7 @@ aadhar:aadhar
 });
 
 /* SUCCESS POPUP */
-alert("🎉 Welcome to CE Campus For Registration\n\n"+data.name);
+alert("🎉 Welcome to CE Campus For Registration\n\n "Name:+data.name);
 
 /* PRINTABLE SLIP */
 document.getElementById("slip").innerHTML=`

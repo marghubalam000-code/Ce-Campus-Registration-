@@ -2,21 +2,19 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>CE Campus Registration</title>
+<title>CE Campus Admission System</title>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 
-/* BACKGROUND */
 body{
 margin:0;
 font-family:'Segoe UI',sans-serif;
 background:linear-gradient(135deg,#141e30,#243b55);
 }
 
-/* HEADER */
 .header{
 background:linear-gradient(90deg,#00c9ff,#92fe9d);
 padding:18px;
@@ -25,7 +23,6 @@ font-size:22px;
 font-weight:bold;
 }
 
-/* CARD */
 .container{
 max-width:650px;
 margin:30px auto;
@@ -35,17 +32,14 @@ border-radius:15px;
 box-shadow:0 15px 40px rgba(0,0,0,0.4);
 }
 
-/* LABEL */
 label{
 font-weight:bold;
 display:block;
 margin-top:10px;
 }
 
-/* STAR */
 .star{color:red;}
 
-/* INPUT */
 input,select{
 width:100%;
 padding:12px;
@@ -54,7 +48,6 @@ border-radius:8px;
 border:1px solid #ccc;
 }
 
-/* BUTTON */
 button{
 width:100%;
 padding:14px;
@@ -70,7 +63,6 @@ transition:0.3s;
 
 button:hover{transform:scale(1.02);}
 
-/* SLIP */
 .slip{
 margin-top:20px;
 padding:20px;
@@ -79,15 +71,6 @@ background:#f5ffff;
 border-radius:10px;
 }
 
-/* PRINT AREA */
-#printArea{
-width:210mm;
-padding:20px;
-background:white;
-border:2px solid #00c9ff;
-}
-
-/* DESIGN */
 .design{
 position:fixed;
 right:10px;
@@ -99,6 +82,8 @@ font-size:12px;
 font-weight:bold;
 }
 
+.hidden{display:none;}
+
 .success{
 text-align:center;
 color:green;
@@ -107,15 +92,13 @@ font-size:16px;
 margin-top:10px;
 }
 
-.hidden{display:none;}
-
 </style>
 </head>
 
 <body>
 
 <div class="header">
-🎓STUDENT REGISTRATION PORTAL FOR CATALYST EDUCATIONAL CAMPUS
+🎓 CE CAMPUS - ADMISSION PORTAL
 </div>
 
 <div class="container">
@@ -134,54 +117,122 @@ margin-top:10px;
 <label>Address <span class="star">*</span></label>
 <input id="address" required>
 
-<label>Aadhar Number <span class="star">*</span></label>
-<input id="aadhar Number" maxlength="12" required>
+<label>Aadhar <span class="star">*</span></label>
+<input id="aadhar" maxlength="12" required>
 
 <label>Class <span class="star">*</span></label>
 <select id="class" required>
-<option value="">Select</option>
-<option>Class 06</option><not option>
-<option>Class 07</option>
-<option>Class 08</option>
-<option>Class 09</option>
-<option>Class 10</option>
-<option>Class 11</option>
-<option>Class 12</option>
+<option value="">Select Class</option>
+<option>06</option>
+<option>07</option>
+<option>08</option>
+<option>09</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
 </select>
 
+<!-- STREAM (ONLY FOR 11 & 12) -->
+<div id="streamBox" class="hidden">
+
 <label>Stream <span class="star">*</span></label>
-<select id="stream" required>
-<option value="">Select</option>
+<select id="stream">
+<option value="">Select Stream</option>
 <option>Science</option>
 <option>Arts</option>
 <option>Commerce</option>
 </select>
+
+</div>
+
+<!-- SUBJECT -->
+<div id="subjectBox" class="hidden">
+<label>Subject <span class="star">*</span></label>
+<select id="subject">
+<option value="">Select Subject</option>
+<option>Mathematics</option>
+<option>Biology</option>
+<option>Physics</option>
+<option>Chemistry</option>
+<option>History</option>
+<option>Geography</option>
+<option>Political Science</option>
+<option>Economics</option>
+</select>
+</div>
 
 <label>Photo <span class="star">*</span></label>
 <input type="file" id="photo" required>
 
 <button type="submit">REGISTER STUDENT</button>
 
-<p id="msg" class="success"></p>
+</form>
 
+<p id="msg" class="success"></p>
 <div id="slip"></div>
 
 </div>
 
-<div class="design">Design by Marghubur Rahman👋👋</div>
+<div class="design">Design by Marghubur Rahman</div>
 
 <script>
 emailjs.init("q7WRi2qk3AUR725UG");
 
+/* CLASS CHANGE LOGIC */
+document.getElementById("class").addEventListener("change",function(){
+let c=this.value;
+
+if(c==="11" || c==="12"){
+document.getElementById("streamBox").style.display="block";
+}else{
+document.getElementById("streamBox").style.display="none";
+document.getElementById("subjectBox").style.display="none";
+}
+});
+
+/* STREAM → SUBJECT */
+document.getElementById("stream").addEventListener("change",function(){
+let s=this.value;
+if(s!==""){
+document.getElementById("subjectBox").style.display="block";
+}else{
+document.getElementById("subjectBox").style.display="none";
+}
+});
+
+/* AADHAR FORMAT */
+document.getElementById("aadhar").addEventListener("input",function(e){
+let v=e.target.value.replace(/\D/g,"").substring(0,12);
+let f=v;
+if(v.length>4) f=v.substring(0,4)+"-"+v.substring(4);
+if(v.length>8) f=v.substring(0,4)+"-"+v.substring(4,8)+"-"+v.substring(8);
+e.target.value=f;
+});
+
+/* SUBMIT */
 document.getElementById("form").addEventListener("submit",function(e){
 e.preventDefault();
 
 let file=document.getElementById("photo").files[0];
-if(!file){alert("Upload Photo");return;}
+if(!file){alert("Upload photo");return;}
 
-let aadhar=document.getElementById("aadhar").value.trim();
+let aadhar=document.getElementById("aadhar").value.replace(/-/g,"");
 if(!/^\d{12}$/.test(aadhar)){
-alert("Invalid Aadhar (12 digits only)");
+alert("Invalid Aadhar");
+return;
+}
+
+let cls=document.getElementById("class").value;
+let stream=document.getElementById("stream").value;
+let subject=document.getElementById("subject").value;
+
+if((cls==="11" || cls==="12") && !stream){
+alert("Select Stream");
+return;
+}
+
+if((cls==="11" || cls==="12") && !subject){
+alert("Select Subject");
 return;
 }
 
@@ -196,33 +247,27 @@ name:document.getElementById("name").value,
 father:document.getElementById("father").value,
 mobile:document.getElementById("mobile").value,
 address:document.getElementById("address").value,
-class:document.getElementById("class").value,
-stream:document.getElementById("stream").value,
+class:cls,
+stream:stream,
+subject:subject,
 date:new Date().toLocaleString()
 };
 
-/* EMAIL */
-emailjs.send("service_bnw6tan","template_ye9opt9",{
-...data,
-aadhar:aadhar
-});
-
 /* SUCCESS POPUP */
-alert("🎉 Welcome to CE Campus For Registration\n\n "Name:+data.name);
+alert("🎉 Welcome to CE Campus\n\nStudent: "+data.name);
 
-/* PRINTABLE SLIP */
+/* SLIP */
 document.getElementById("slip").innerHTML=`
-<div id="printArea">
+<div class="slip">
 
 <h2 style="text-align:center;color:#00c9ff;">CE CAMPUS REGISTRATION SLIP</h2>
 
-<p><b>Student Name:</b> ${data.name}</p>
-<p><b>Father Name:</b> ${data.father}</p>
-<p><b>Mobile:</b> ${data.mobile}</p>
-<p><b>Address:</b> ${data.address}</p>
-<p><b>Aadhar:</b> ${aadhar}</p>
+<p><b>Name:</b> ${data.name}</p>
+<p><b>Father:</b> ${data.father}</p>
 <p><b>Class:</b> ${data.class}</p>
 <p><b>Stream:</b> ${data.stream}</p>
+<p><b>Subject:</b> ${data.subject}</p>
+<p><b>Mobile:</b> ${data.mobile}</p>
 <p><b>Date:</b> ${data.date}</p>
 
 <img src="${photo}" style="width:120px;height:120px;border-radius:10px;border:2px solid #00c9ff;">
@@ -233,41 +278,34 @@ document.getElementById("slip").innerHTML=`
 
 </div>`;
 
-/* PROFESSIONAL PDF */
+/* PDF */
 const {jsPDF}=window.jspdf;
 let doc=new jsPDF();
 
 doc.setFillColor(0,201,255);
 doc.rect(0,0,220,40,"F");
 
-doc.setFontSize(25);
-doc.text("CATALYST EDUCATIONAL CAMPUS",85,20);
+doc.setFontSize(20);
+doc.text("CE CAMPUS",85,20);
 
-doc.setFontSize(18);
-doc.text("REGISTRATION CERTIFICATE",60,30);
+doc.setFontSize(14);
+doc.text("ADMISSION CERTIFICATE",60,30);
 
 doc.rect(10,50,190,200);
 
-doc.setFontSize(12);
 doc.text("Name: "+data.name,15,70);
 doc.text("Father: "+data.father,15,80);
-doc.text("Mobile: "+data.mobile,15,90);
-doc.text("Class: "+data.class,15,100);
-doc.text("Stream: "+data.stream,15,110);
-doc.text("Address: "+data.address,15,120);
-doc.text("Aadhar: "+aadhar,15,130);
-doc.text("Date: "+data.date,15,140);
+doc.text("Class: "+data.class,15,90);
+doc.text("Stream: "+data.stream,15,100);
+doc.text("Subject: "+data.subject,15,110);
+doc.text("Mobile: "+data.mobile,15,120);
+doc.text("Date: "+data.date,15,130);
 
 doc.addImage(photo,"JPEG",140,60,50,50);
 
-doc.setTextColor(0,150,100);
-doc.text("✓ Successfully Registered",50,180);
+doc.save(data.name+"_CE_Certificate.pdf");
 
-doc.save(data.name+"_CE_Registration form.pdf");
-
-/* MESSAGE */
-document.getElementById("msg").innerText=
-"✔ Registration Successful - Welcome to CE Campus";
+document.getElementById("msg").innerText="✔ Registration Successful";
 
 };
 

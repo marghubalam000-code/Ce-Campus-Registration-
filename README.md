@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>CE Campus Admission System</title>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -51,10 +52,10 @@ border:1px solid #ccc;
 button{
 width:100%;
 padding:14px;
-margin-top:15px;
+margin-top:12px;
 border:none;
 border-radius:10px;
-font-size:16px;
+font-size:15px;
 font-weight:bold;
 cursor:pointer;
 background:linear-gradient(90deg,#00c9ff,#92fe9d);
@@ -71,6 +72,16 @@ background:#f5ffff;
 border-radius:10px;
 }
 
+.success{
+text-align:center;
+color:green;
+font-weight:bold;
+font-size:16px;
+margin-top:10px;
+}
+
+.hidden{display:none;}
+
 .design{
 position:fixed;
 right:10px;
@@ -80,16 +91,6 @@ padding:8px;
 border-radius:8px;
 font-size:12px;
 font-weight:bold;
-}
-
-.hidden{display:none;}
-
-.success{
-text-align:center;
-color:green;
-font-weight:bold;
-font-size:16px;
-margin-top:10px;
 }
 
 </style>
@@ -118,11 +119,11 @@ margin-top:10px;
 <input id="address" required>
 
 <label>Aadhar <span class="star">*</span></label>
-<input id="aadhar" maxlength="12" required>
+<input id="aadhar" maxlength="14" required>
 
 <label>Class <span class="star">*</span></label>
 <select id="class" required>
-<option value="">Select Class</option>
+<option value="">Select</option>
 <option>06</option>
 <option>07</option>
 <option>08</option>
@@ -132,31 +133,26 @@ margin-top:10px;
 <option>12</option>
 </select>
 
-<!-- STREAM (ONLY FOR 11 & 12) -->
 <div id="streamBox" class="hidden">
-
 <label>Stream <span class="star">*</span></label>
 <select id="stream">
-<option value="">Select Stream</option>
+<option value="">Select</option>
 <option>Science</option>
 <option>Arts</option>
 <option>Commerce</option>
 </select>
-
 </div>
 
-<!-- SUBJECT -->
 <div id="subjectBox" class="hidden">
 <label>Subject <span class="star">*</span></label>
 <select id="subject">
-<option value="">Select Subject</option>
+<option value="">Select</option>
 <option>Mathematics</option>
 <option>Biology</option>
 <option>Physics</option>
 <option>Chemistry</option>
 <option>History</option>
 <option>Geography</option>
-<option>Political Science</option>
 <option>Economics</option>
 </select>
 </div>
@@ -164,7 +160,13 @@ margin-top:10px;
 <label>Photo <span class="star">*</span></label>
 <input type="file" id="photo" required>
 
-<button type="submit">REGISTER STUDENT</button>
+<!-- PAYMENT -->
+<button type="button" onclick="payNow()">💳 Pay Registration Fee</button>
+<button type="button" onclick="checkPayment()">🔄 Refresh Payment Status</button>
+
+<p id="payStatus">❌ Payment Pending</p>
+
+<button type="submit">🚀 REGISTER STUDENT</button>
 
 </form>
 
@@ -173,16 +175,25 @@ margin-top:10px;
 
 </div>
 
-<div class="design">Design by Marghubur Rahman</div>
+<div class="design">Design by M Rahman</div>
 
 <script>
 emailjs.init("q7WRi2qk3AUR725UG");
 
-/* CLASS CHANGE LOGIC */
+/* PAYMENT STORAGE */
+let paymentDone = localStorage.getItem("paymentDone")==="true";
+let paymentId = localStorage.getItem("paymentId")||"";
+
+function updateUI(){
+document.getElementById("payStatus").innerText =
+paymentDone ? "✅ Paid: "+paymentId : "❌ Payment Pending";
+}
+updateUI();
+
+/* CLASS LOGIC */
 document.getElementById("class").addEventListener("change",function(){
 let c=this.value;
-
-if(c==="11" || c==="12"){
+if(c==="11"||c==="12"){
 document.getElementById("streamBox").style.display="block";
 }else{
 document.getElementById("streamBox").style.display="none";
@@ -190,14 +201,9 @@ document.getElementById("subjectBox").style.display="none";
 }
 });
 
-/* STREAM → SUBJECT */
+/* STREAM */
 document.getElementById("stream").addEventListener("change",function(){
-let s=this.value;
-if(s!==""){
-document.getElementById("subjectBox").style.display="block";
-}else{
-document.getElementById("subjectBox").style.display="none";
-}
+document.getElementById("subjectBox").style.display=this.value?"block":"none";
 });
 
 /* AADHAR FORMAT */
@@ -209,9 +215,48 @@ if(v.length>8) f=v.substring(0,4)+"-"+v.substring(4,8)+"-"+v.substring(8);
 e.target.value=f;
 });
 
+/* PAY NOW */
+function payNow(){
+var options={
+key:"rzp_test_SeDZVp4F9WDRt9",
+amount:50000,
+currency:"INR",
+name:"CE Campus",
+description:"Registration Fee",
+handler:function(response){
+
+paymentDone=true;
+paymentId=response.razorpay_payment_id;
+
+localStorage.setItem("paymentDone","true");
+localStorage.setItem("paymentId",paymentId);
+
+updateUI();
+alert("Payment Successful ✔");
+},
+theme:{color:"#00c9ff"}
+};
+
+new Razorpay(options).open();
+}
+
+/* REFRESH */
+function checkPayment(){
+paymentDone = localStorage.getItem("paymentDone")==="true";
+paymentId = localStorage.getItem("paymentId")||"";
+updateUI();
+
+alert(paymentDone ? "Payment Verified ✔" : "Payment Not Done ❌");
+}
+
 /* SUBMIT */
 document.getElementById("form").addEventListener("submit",function(e){
 e.preventDefault();
+
+if(!paymentDone){
+alert("❌ Please complete payment first");
+return;
+}
 
 let file=document.getElementById("photo").files[0];
 if(!file){alert("Upload photo");return;}
@@ -226,21 +271,14 @@ let cls=document.getElementById("class").value;
 let stream=document.getElementById("stream").value;
 let subject=document.getElementById("subject").value;
 
-if((cls==="11" || cls==="12") && !stream){
-alert("Select Stream");
-return;
-}
-
-if((cls==="11" || cls==="12") && !subject){
-alert("Select Subject");
-return;
-}
+if((cls==="11"||cls==="12") && !stream){alert("Select stream");return;}
+if((cls==="11"||cls==="12") && !subject){alert("Select subject");return;}
 
 let reader=new FileReader();
 
-reader.onload=function(event){
+reader.onload=function(e){
 
-let photo=event.target.result;
+let photo=e.target.result;
 
 let data={
 name:document.getElementById("name").value,
@@ -253,27 +291,24 @@ subject:subject,
 date:new Date().toLocaleString()
 };
 
-/* SUCCESS POPUP */
-alert("🎉 Welcome to CE Campus\n\nStudent: "+data.name);
+/* WELCOME */
+alert("🎉 Welcome to CE Campus\nStudent: "+data.name);
 
 /* SLIP */
 document.getElementById("slip").innerHTML=`
 <div class="slip">
 
-<h2 style="text-align:center;color:#00c9ff;">CE CAMPUS REGISTRATION SLIP</h2>
+<h2 style="text-align:center;color:#00c9ff;">CE CAMPUS SLIP</h2>
 
 <p><b>Name:</b> ${data.name}</p>
-<p><b>Father:</b> ${data.father}</p>
 <p><b>Class:</b> ${data.class}</p>
 <p><b>Stream:</b> ${data.stream}</p>
 <p><b>Subject:</b> ${data.subject}</p>
-<p><b>Mobile:</b> ${data.mobile}</p>
 <p><b>Date:</b> ${data.date}</p>
 
 <img src="${photo}" style="width:120px;height:120px;border-radius:10px;border:2px solid #00c9ff;">
 
 <br><br>
-
 <button onclick="window.print()">🖨️ PRINT SLIP</button>
 
 </div>`;
@@ -294,12 +329,11 @@ doc.text("ADMISSION CERTIFICATE",60,30);
 doc.rect(10,50,190,200);
 
 doc.text("Name: "+data.name,15,70);
-doc.text("Father: "+data.father,15,80);
-doc.text("Class: "+data.class,15,90);
-doc.text("Stream: "+data.stream,15,100);
-doc.text("Subject: "+data.subject,15,110);
-doc.text("Mobile: "+data.mobile,15,120);
-doc.text("Date: "+data.date,15,130);
+doc.text("Class: "+data.class,15,80);
+doc.text("Stream: "+data.stream,15,90);
+doc.text("Subject: "+data.subject,15,100);
+doc.text("Mobile: "+data.mobile,15,110);
+doc.text("Date: "+data.date,15,120);
 
 doc.addImage(photo,"JPEG",140,60,50,50);
 

@@ -222,8 +222,8 @@ e.target.value=f;
 
 function payNow(){
 var options={
-key:"rzp_test_SeDZVp4F9WDRt9",
-amount:500,
+key:"rzp_test_SeELoMqEhitjTE",
+amount:0,
 currency:"INR",
 name:"CE Campus",
 description:"Registration Fee",

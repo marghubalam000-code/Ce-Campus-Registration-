@@ -2,127 +2,158 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Catalyst Educational Campus</title>
+<title>CE Campus Registration</title>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
+
+/* BACKGROUND */
 body{
-    font-family:Arial;
-    margin:0;
-    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#141e30,#243b55);
 }
 
+/* HEADER */
 .header{
-    padding:18px;
-    text-align:center;
-    background:linear-gradient(90deg,#00c9ff,#92fe9d);
-    font-weight:bold;
-    font-size:20px;
+background:linear-gradient(90deg,#00c9ff,#92fe9d);
+padding:18px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
 }
 
+/* CARD */
 .container{
-    max-width:600px;
-    margin:25px auto;
-    background:#fff;
-    padding:25px;
-    border-radius:12px;
+max-width:650px;
+margin:30px auto;
+background:#fff;
+padding:25px;
+border-radius:15px;
+box-shadow:0 15px 40px rgba(0,0,0,0.4);
 }
 
+/* LABEL */
+label{
+font-weight:bold;
+display:block;
+margin-top:10px;
+}
+
+/* STAR */
+.star{color:red;}
+
+/* INPUT */
 input,select{
-    width:100%;
-    padding:12px;
-    margin:8px 0;
-    border-radius:8px;
-    border:1px solid #ccc;
+width:100%;
+padding:12px;
+margin-top:5px;
+border-radius:8px;
+border:1px solid #ccc;
 }
 
+/* BUTTON */
 button{
-    width:100%;
-    padding:12px;
-    background:#00c9ff;
-    border:none;
-    border-radius:8px;
-    font-weight:bold;
-    cursor:pointer;
+width:100%;
+padding:14px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+background:linear-gradient(90deg,#00c9ff,#92fe9d);
+transition:0.3s;
 }
 
-button:hover{background:#00b3e6;}
+button:hover{transform:scale(1.02);}
 
+/* SLIP */
 .slip{
-    margin-top:15px;
-    padding:15px;
-    border:2px dashed #00c9ff;
-    background:#f4ffff;
-    text-align:center;
+margin-top:20px;
+padding:20px;
+border:2px dashed #00c9ff;
+background:#f5ffff;
+border-radius:10px;
 }
 
+/* PRINT AREA */
+#printArea{
+width:210mm;
+padding:20px;
+background:white;
+border:2px solid #00c9ff;
+}
+
+/* DESIGN */
 .design{
-    position:fixed;
-    right:10px;
-    bottom:10px;
-    background:#00c9ff;
-    padding:8px;
-    border-radius:8px;
-    font-size:12px;
+position:fixed;
+right:10px;
+bottom:10px;
+background:#00c9ff;
+padding:8px;
+border-radius:8px;
+font-size:12px;
+font-weight:bold;
+}
+
+.success{
+text-align:center;
+color:green;
+font-weight:bold;
+font-size:16px;
+margin-top:10px;
 }
 
 .hidden{display:none;}
 
-.success{
-    text-align:center;
-    color:green;
-    font-weight:bold;
-}
 </style>
 </head>
 
 <body>
 
-<div class="header">CATALYST EDUCATIONAL CAMPUS - REGISTRATION</div>
+<div class="header">
+🎓STUDENT REGISTRATION PORTAL FOR CATALYST EDUCATIONAL CAMPUS
+</div>
 
 <div class="container">
 
 <form id="form">
 
-<input id="name" placeholder="Student Name" required>
-<input id="father" placeholder="Father Name" required>
-<input id="mobile" placeholder="Mobile" required>
-<input id="address" placeholder="Address" required>
+<label>Student Name <span class="star">*</span></label>
+<input id="name" required>
 
-<input id="aadhar" placeholder="Aadhar (12 digits)" maxlength="12" required>
+<label>Father Name <span class="star">*</span></label>
+<input id="father" required>
 
+<label>Mobile <span class="star">*</span></label>
+<input id="mobile" required>
+
+<label>Address <span class="star">*</span></label>
+<input id="address" required>
+
+<label>Aadhar <span class="star">*</span></label>
+<input id="aadhar" maxlength="12" required>
+
+<label>Class <span class="star">*</span></label>
 <select id="class" required>
-<option value="">Select Class</option>
+<option value="">Select</option>
 <option>Class 10</option>
 <option>Class 11</option>
 <option>Class 12</option>
 </select>
 
+<label>Stream <span class="star">*</span></label>
 <select id="stream" required>
-<option value="">Select Stream</option>
-<option value="Science">Science</option>
-<option value="Arts">Arts</option>
-<option value="Commerce">Commerce</option>
+<option value="">Select</option>
+<option>Science</option>
+<option>Arts</option>
+<option>Commerce</option>
 </select>
 
-<div id="scienceBox" class="hidden">
-<select id="scienceSubject">
-<option value="">Select Subject</option>
-<option>Mathematics</option>
-<option>Biology</option>
-</select>
-</div>
-
-<div id="artsBox" class="hidden">
-<select id="artsSubject">
-<option value="">Select Subject</option>
-<option>History</option>
-<option>Geography</option>
-</select>
-</div>
-
+<label>Photo <span class="star">*</span></label>
 <input type="file" id="photo" required>
 
 <button type="submit">REGISTER STUDENT</button>
@@ -130,47 +161,27 @@ button:hover{background:#00b3e6;}
 </form>
 
 <p id="msg" class="success"></p>
+
 <div id="slip"></div>
 
 </div>
 
-<div class="design">Design by M Rahman</div>
+<div class="design">Design by Marghubur Rahman</div>
 
 <script>
 emailjs.init("q7WRi2qk3AUR725UG");
 
-/* STREAM CHANGE */
-document.getElementById("stream").addEventListener("change",function(){
-let s=this.value;
-document.getElementById("scienceBox").style.display=(s==="Science")?"block":"none";
-document.getElementById("artsBox").style.display=(s==="Arts")?"block":"none";
-});
-
-/* FORM SUBMIT - FIXED */
 document.getElementById("form").addEventListener("submit",function(e){
 e.preventDefault();
 
 let file=document.getElementById("photo").files[0];
-if(!file){alert("Upload photo");return;}
+if(!file){alert("Upload Photo");return;}
 
 let aadhar=document.getElementById("aadhar").value.trim();
 if(!/^\d{12}$/.test(aadhar)){
 alert("Invalid Aadhar (12 digits only)");
 return;
 }
-
-let stream=document.getElementById("stream").value;
-let subject="";
-
-if(stream==="Science"){
-subject=document.getElementById("scienceSubject").value;
-}
-if(stream==="Arts"){
-subject=document.getElementById("artsSubject").value;
-}
-if(stream==="Commerce") subject="Commerce";
-
-if(!subject){alert("Select subject");return;}
 
 let reader=new FileReader();
 
@@ -184,61 +195,77 @@ father:document.getElementById("father").value,
 mobile:document.getElementById("mobile").value,
 address:document.getElementById("address").value,
 class:document.getElementById("class").value,
-stream:stream,
-subject:subject,
+stream:document.getElementById("stream").value,
 date:new Date().toLocaleString()
 };
 
 /* EMAIL */
 emailjs.send("service_bnw6tan","template_ye9opt9",{
-name:data.name,
-father:data.father,
-mobile:data.mobile,
-address:data.address,
-aadhar:aadhar,
-class:data.class,
-stream:data.stream,
-subject:data.subject,
-date:data.date
+...data,
+aadhar:aadhar
 });
 
-/* SLIP FIXED */
+/* SUCCESS POPUP */
+alert("🎉 Welcome to CE Campus For Registration\n\nName: "+data.name);
+
+/* PRINTABLE SLIP */
 document.getElementById("slip").innerHTML=`
-<div class="slip">
-<img src="${photo}" style="width:120px;height:120px;border-radius:10px;"><br><br>
-<b>Name:</b> ${data.name}<br>
-<b>Class:</b> ${data.class}<br>
-<b>Stream:</b> ${data.stream}<br>
-<b>Subject:</b> ${data.subject}<br>
-<b>Date:</b> ${data.date}<br>
+<div id="printArea">
+
+<h2 style="text-align:center;color:#00c9ff;">CE CAMPUS REGISTRATION SLIP</h2>
+
+<p><b>Student Name:</b> ${data.name}</p>
+<p><b>Father Name:</b> ${data.father}</p>
+<p><b>Mobile:</b> ${data.mobile}</p>
+<p><b>Address:</b> ${data.address}</p>
+<p><b>Aadhar:</b> ${aadhar}</p>
+<p><b>Class:</b> ${data.class}</p>
+<p><b>Stream:</b> ${data.stream}</p>
+<p><b>Date:</b> ${data.date}</p>
+
+<img src="${photo}" style="width:120px;height:120px;border-radius:10px;border:2px solid #00c9ff;">
+
+<br><br>
+
+<button onclick="window.print()">🖨️ PRINT SLIP</button>
+
 </div>`;
 
-/* PDF FIXED */
+/* PROFESSIONAL PDF */
 const {jsPDF}=window.jspdf;
 let doc=new jsPDF();
 
-doc.setFontSize(18);
-doc.text("CATALYST EDUCATIONAL CAMPUS",20,20);
+doc.setFillColor(0,201,255);
+doc.rect(0,0,220,40,"F");
 
-doc.setFontSize(12);
+doc.setFontSize(20);
+doc.text("CE CAMPUS",85,20);
+
+doc.setFontSize(14);
 doc.text("REGISTRATION CERTIFICATE",60,30);
 
-doc.rect(10,40,190,140);
+doc.rect(10,50,190,200);
 
-doc.text("Name: "+data.name,15,60);
-doc.text("Father: "+data.father,15,70);
-doc.text("Class: "+data.class,15,80);
-doc.text("Stream: "+data.stream,15,90);
-doc.text("Subject: "+data.subject,15,100);
-doc.text("Mobile: "+data.mobile,15,110);
-doc.text("Date: "+data.date,15,120);
+doc.setFontSize(12);
+doc.text("Name: "+data.name,15,70);
+doc.text("Father: "+data.father,15,80);
+doc.text("Mobile: "+data.mobile,15,90);
+doc.text("Class: "+data.class,15,100);
+doc.text("Stream: "+data.stream,15,110);
+doc.text("Address: "+data.address,15,120);
+doc.text("Aadhar: "+aadhar,15,130);
+doc.text("Date: "+data.date,15,140);
 
-doc.addImage(photo,"JPEG",140,50,50,50);
+doc.addImage(photo,"JPEG",140,60,50,50);
 
-doc.save(data.name+"_certificate.pdf");
+doc.setTextColor(0,150,100);
+doc.text("✓ Successfully Registered",50,180);
 
-/* SUCCESS */
-document.getElementById("msg").innerText="Registration Successful 🎉";
+doc.save(data.name+"_CE_Certificate.pdf");
+
+/* MESSAGE */
+document.getElementById("msg").innerText=
+"✔ Registration Successful - Welcome to CE Campus";
 
 };
 

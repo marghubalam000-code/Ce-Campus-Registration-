@@ -134,13 +134,17 @@ margin-top:10px;
 <label>Address <span class="star">*</span></label>
 <input id="address" required>
 
-<label>Aadhar <span class="star">*</span></label>
-<input id="aadhar" maxlength="12" required>
+<label>Aadhar Number <span class="star">*</span></label>
+<input id="aadhar Number" maxlength="12" required>
 
 <label>Class <span class="star">*</span></label>
 <select id="class" required>
 <option value="">Select</option>
-<option>Class 10</option>
+<option>Class 06
+<option>Class 07
+<option>Class 08
+<option>Class 09
+<option>Class 10
 <option>Class 11</option>
 <option>Class 12</option>
 </select>
@@ -206,7 +210,7 @@ aadhar:aadhar
 });
 
 /* SUCCESS POPUP */
-alert("🎉 Welcome to CE Campus For Registration\n\nName: "+data.name);
+alert("🎉 Welcome to CE Campus For Registration\n\n"+data.name);
 
 /* PRINTABLE SLIP */
 document.getElementById("slip").innerHTML=`
@@ -238,10 +242,10 @@ let doc=new jsPDF();
 doc.setFillColor(0,201,255);
 doc.rect(0,0,220,40,"F");
 
-doc.setFontSize(20);
-doc.text("CE CAMPUS",85,20);
+doc.setFontSize(25);
+doc.text("CATALYST EDUCATIONAL CAMPUS",85,20);
 
-doc.setFontSize(14);
+doc.setFontSize(18);
 doc.text("REGISTRATION CERTIFICATE",60,30);
 
 doc.rect(10,50,190,200);
@@ -261,7 +265,7 @@ doc.addImage(photo,"JPEG",140,60,50,50);
 doc.setTextColor(0,150,100);
 doc.text("✓ Successfully Registered",50,180);
 
-doc.save(data.name+"_CE_Certificate.pdf");
+doc.save(data.name+"_CE_Registration form.pdf");
 
 /* MESSAGE */
 document.getElementById("msg").innerText=

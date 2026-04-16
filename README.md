@@ -140,11 +140,11 @@ margin-top:10px;
 <label>Class <span class="star">*</span></label>
 <select id="class" required>
 <option value="">Select</option>
-<option>Class 06
-<option>Class 07
-<option>Class 08
-<option>Class 09
-<option>Class 10
+<option>Class 06</option>
+<option>Class 07</option>
+<option>Class 08</option>
+<option>Class 09</option>
+<option>Class 10</option>
 <option>Class 11</option>
 <option>Class 12</option>
 </select>
@@ -170,7 +170,7 @@ margin-top:10px;
 
 </div>
 
-<div class="design">Design by Marghubur Rahman</div>
+<div class="design">Design by Marghubur Rahman👋👋</div>
 
 <script>
 emailjs.init("q7WRi2qk3AUR725UG");

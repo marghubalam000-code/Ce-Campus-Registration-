@@ -173,7 +173,7 @@ font-weight:bold;
 <button type="button" onclick="payNow()">💳 Pay Registration Fee</button>
 <button type="button" onclick="checkPayment()">🔄 Refresh Payment Status</button>
 
-<p id="payStatus">❌ Payment Pending</p>
+</p>
 
 <button type="submit">🚀 REGISTER STUDENT</button>
 

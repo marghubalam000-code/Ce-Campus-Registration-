@@ -2,10 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>CE Campus Admission System</title>
+<title>CATALYST EDUCATIONAL CAMPUS EDUCATIONAL SYSTEM</title>
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
@@ -67,10 +65,7 @@ font-size:15px;
 font-weight:bold;
 cursor:pointer;
 background:linear-gradient(90deg,#00c9ff,#92fe9d);
-transition:0.3s;
 }
-
-button:hover{transform:scale(1.02);}
 
 .slip{
 margin-top:20px;
@@ -79,14 +74,6 @@ border:2px dashed #00c9ff;
 background:#f5ffff;
 border-radius:10px;
 text-align:center;
-}
-
-.success{
-text-align:center;
-color:green;
-font-weight:bold;
-font-size:16px;
-margin-top:10px;
 }
 
 .hidden{display:none;}
@@ -170,34 +157,19 @@ font-weight:bold;
 <label>Photo <span class="star">*</span></label>
 <input type="file" id="photo" required>
 
-<button type="button" onclick="payNow()">💳 Pay Registration Fee</button>
-<button type="button" onclick="checkPayment()">🔄 Refresh Payment Status</button>
-
-</p>
-
 <button type="submit">🚀 REGISTER STUDENT</button>
 
 </form>
 
-<p id="msg" class="success"></p>
 <div id="slip"></div>
 
 </div>
 
-<div class="design">Design by M Rahman</div>
+<div class="design">Design by Marghubur Rahman</div>
 
 <script>
-emailjs.init("q7WRi2qk3AUR725UG");
 
-let paymentDone = localStorage.getItem("paymentDone")==="true";
-let paymentId = localStorage.getItem("paymentId")||"";
-
-function updateUI(){
-document.getElementById("payStatus").innerText =
-paymentDone ? "✅ Paid: "+paymentId : "❌ Payment Pending";
-}
-updateUI();
-
+/* CLASS LOGIC */
 document.getElementById("class").addEventListener("change",function(){
 let c=this.value;
 if(c==="11"||c==="12"){
@@ -208,10 +180,12 @@ document.getElementById("subjectBox").style.display="none";
 }
 });
 
+/* STREAM */
 document.getElementById("stream").addEventListener("change",function(){
 document.getElementById("subjectBox").style.display=this.value?"block":"none";
 });
 
+/* AADHAR FORMAT */
 document.getElementById("aadhar").addEventListener("input",function(e){
 let v=e.target.value.replace(/\D/g,"").substring(0,12);
 let f=v;
@@ -220,41 +194,13 @@ if(v.length>8) f=v.substring(0,4)+"-"+v.substring(4,8)+"-"+v.substring(8);
 e.target.value=f;
 });
 
-function payNow(){
-var options={
-key:"rzp_test_SeELoMqEhitjTE",
-amount:0,
-currency:"INR",
-name:"CE Campus",
-description:"Registration Fee",
-handler:function(response){
-paymentDone=true;
-paymentId=response.razorpay_payment_id;
-localStorage.setItem("paymentDone","true");
-localStorage.setItem("paymentId",paymentId);
-updateUI();
-alert("Payment Successful ✔");
-}
-};
-new Razorpay(options).open();
-}
-
-function checkPayment(){
-paymentDone = localStorage.getItem("paymentDone")==="true";
-paymentId = localStorage.getItem("paymentId")||"";
-updateUI();
-alert(paymentDone ? "Payment Verified ✔" : "Payment Not Done ❌");
-}
-
+/* SUBMIT */
 document.getElementById("form").addEventListener("submit",function(e){
 e.preventDefault();
 
-if(!paymentDone){
-alert("❌ Complete payment first");
-return;
-}
-
 let file=document.getElementById("photo").files[0];
+if(!file){alert("Upload photo");return;}
+
 let reader=new FileReader();
 
 reader.onload=function(e){

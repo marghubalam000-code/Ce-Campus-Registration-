@@ -18,10 +18,18 @@ background:linear-gradient(135deg,#141e30,#243b55);
 
 .header{
 background:linear-gradient(90deg,#00c9ff,#92fe9d);
-padding:18px;
+padding:15px;
 text-align:center;
 font-size:22px;
 font-weight:bold;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
+}
+
+.header img{
+height:50px;
 }
 
 .container{
@@ -70,6 +78,7 @@ padding:20px;
 border:2px dashed #00c9ff;
 background:#f5ffff;
 border-radius:10px;
+text-align:center;
 }
 
 .success{
@@ -99,7 +108,8 @@ font-weight:bold;
 <body>
 
 <div class="header">
-🎓 CE CAMPUS - ADMISSION PORTAL
+<img src="Ce.JPEG">
+🎓 CATALYST EDUCATIONAL CAMPUS - ADMISSION PORTAL
 </div>
 
 <div class="container">
@@ -160,7 +170,6 @@ font-weight:bold;
 <label>Photo <span class="star">*</span></label>
 <input type="file" id="photo" required>
 
-<!-- PAYMENT -->
 <button type="button" onclick="payNow()">💳 Pay Registration Fee</button>
 <button type="button" onclick="checkPayment()">🔄 Refresh Payment Status</button>
 
@@ -180,7 +189,6 @@ font-weight:bold;
 <script>
 emailjs.init("q7WRi2qk3AUR725UG");
 
-/* PAYMENT STORAGE */
 let paymentDone = localStorage.getItem("paymentDone")==="true";
 let paymentId = localStorage.getItem("paymentId")||"";
 
@@ -190,7 +198,6 @@ paymentDone ? "✅ Paid: "+paymentId : "❌ Payment Pending";
 }
 updateUI();
 
-/* CLASS LOGIC */
 document.getElementById("class").addEventListener("change",function(){
 let c=this.value;
 if(c==="11"||c==="12"){
@@ -201,12 +208,10 @@ document.getElementById("subjectBox").style.display="none";
 }
 });
 
-/* STREAM */
 document.getElementById("stream").addEventListener("change",function(){
 document.getElementById("subjectBox").style.display=this.value?"block":"none";
 });
 
-/* AADHAR FORMAT */
 document.getElementById("aadhar").addEventListener("input",function(e){
 let v=e.target.value.replace(/\D/g,"").substring(0,12);
 let f=v;
@@ -215,65 +220,41 @@ if(v.length>8) f=v.substring(0,4)+"-"+v.substring(4,8)+"-"+v.substring(8);
 e.target.value=f;
 });
 
-/* PAY NOW */
 function payNow(){
 var options={
 key:"rzp_test_SeDZVp4F9WDRt9",
-amount:50000,
+amount:500,
 currency:"INR",
 name:"CE Campus",
 description:"Registration Fee",
 handler:function(response){
-
 paymentDone=true;
 paymentId=response.razorpay_payment_id;
-
 localStorage.setItem("paymentDone","true");
 localStorage.setItem("paymentId",paymentId);
-
 updateUI();
 alert("Payment Successful ✔");
-},
-theme:{color:"#00c9ff"}
+}
 };
-
 new Razorpay(options).open();
 }
 
-/* REFRESH */
 function checkPayment(){
 paymentDone = localStorage.getItem("paymentDone")==="true";
 paymentId = localStorage.getItem("paymentId")||"";
 updateUI();
-
 alert(paymentDone ? "Payment Verified ✔" : "Payment Not Done ❌");
 }
 
-/* SUBMIT */
 document.getElementById("form").addEventListener("submit",function(e){
 e.preventDefault();
 
 if(!paymentDone){
-alert("❌ Please complete payment first");
+alert("❌ Complete payment first");
 return;
 }
 
 let file=document.getElementById("photo").files[0];
-if(!file){alert("Upload photo");return;}
-
-let aadhar=document.getElementById("aadhar").value.replace(/-/g,"");
-if(!/^\d{12}$/.test(aadhar)){
-alert("Invalid Aadhar");
-return;
-}
-
-let cls=document.getElementById("class").value;
-let stream=document.getElementById("stream").value;
-let subject=document.getElementById("subject").value;
-
-if((cls==="11"||cls==="12") && !stream){alert("Select stream");return;}
-if((cls==="11"||cls==="12") && !subject){alert("Select subject");return;}
-
 let reader=new FileReader();
 
 reader.onload=function(e){
@@ -282,34 +263,28 @@ let photo=e.target.result;
 
 let data={
 name:document.getElementById("name").value,
-father:document.getElementById("father").value,
-mobile:document.getElementById("mobile").value,
-address:document.getElementById("address").value,
-class:cls,
-stream:stream,
-subject:subject,
+class:document.getElementById("class").value,
+stream:document.getElementById("stream").value,
+subject:document.getElementById("subject").value,
 date:new Date().toLocaleString()
 };
 
-/* WELCOME */
 alert("🎉 Welcome to CE Campus\nStudent: "+data.name);
 
 /* SLIP */
 document.getElementById("slip").innerHTML=`
 <div class="slip">
 
-<h2 style="text-align:center;color:#00c9ff;">CE CAMPUS SLIP</h2>
+<img src="Ce.JPEG" style="height:60px;"><br>
+<h2 style="color:#00c9ff;">CE CAMPUS SLIP</h2>
 
 <p><b>Name:</b> ${data.name}</p>
 <p><b>Class:</b> ${data.class}</p>
-<p><b>Stream:</b> ${data.stream}</p>
-<p><b>Subject:</b> ${data.subject}</p>
-<p><b>Date:</b> ${data.date}</p>
 
 <img src="${photo}" style="width:120px;height:120px;border-radius:10px;border:2px solid #00c9ff;">
 
 <br><br>
-<button onclick="window.print()">🖨️ PRINT SLIP</button>
+<button onclick="window.print()">🖨️ PRINT</button>
 
 </div>`;
 
@@ -317,29 +292,26 @@ document.getElementById("slip").innerHTML=`
 const {jsPDF}=window.jspdf;
 let doc=new jsPDF();
 
-doc.setFillColor(0,201,255);
-doc.rect(0,0,220,40,"F");
+let logo=new Image();
+logo.src="Ce.JPEG";
+
+logo.onload=function(){
+
+doc.addImage(logo,"JPEG",10,5,30,30);
 
 doc.setFontSize(20);
-doc.text("CE CAMPUS",85,20);
+doc.text("CE CAMPUS",80,20);
 
-doc.setFontSize(14);
-doc.text("ADMISSION CERTIFICATE",60,30);
+doc.rect(10,40,190,200);
 
-doc.rect(10,50,190,200);
+doc.text("Name: "+data.name,15,60);
+doc.text("Class: "+data.class,15,70);
 
-doc.text("Name: "+data.name,15,70);
-doc.text("Class: "+data.class,15,80);
-doc.text("Stream: "+data.stream,15,90);
-doc.text("Subject: "+data.subject,15,100);
-doc.text("Mobile: "+data.mobile,15,110);
-doc.text("Date: "+data.date,15,120);
+doc.addImage(photo,"JPEG",140,50,50,50);
 
-doc.addImage(photo,"JPEG",140,60,50,50);
+doc.save(data.name+"_Certificate.pdf");
 
-doc.save(data.name+"_CE_Certificate.pdf");
-
-document.getElementById("msg").innerText="✔ Registration Successful";
+};
 
 };
 

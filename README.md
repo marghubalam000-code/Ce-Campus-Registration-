@@ -1,8 +1,8 @@
-<Marghub07_dz>
+<Web Design By Marghub07>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>CE Campus Admission System</title>
+<title>Catalyst Educational Campus Admission System</title>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -17,13 +17,13 @@ background:linear-gradient(135deg,#141e30,#243b55);
 .header{
 background:linear-gradient(90deg,#00c9ff,#92fe9d);
 padding:15px;
-text-align:center;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
 font-size:22px;
 font-weight:bold;
-display:flex;
-justify-content:center;
-align-items:center;
-gap:10px;
+color:#000;
 }
 
 .header img{height:50px;}
@@ -37,7 +37,7 @@ border-radius:15px;
 box-shadow:0 15px 40px rgba(0,0,0,0.4);
 }
 
-label{font-weight:bold;display:block;margin-top:10px;}
+label{font-weight:bold;margin-top:10px;display:block;}
 .star{color:red;}
 
 input,select{
@@ -54,17 +54,12 @@ padding:14px;
 margin-top:12px;
 border:none;
 border-radius:10px;
-font-size:15px;
 font-weight:bold;
 cursor:pointer;
 background:linear-gradient(90deg,#00c9ff,#92fe9d);
 }
 
-.status{
-text-align:center;
-font-weight:bold;
-margin-top:10px;
-}
+.status{text-align:center;font-weight:bold;margin-top:10px;}
 
 .slip{
 margin-top:20px;
@@ -72,10 +67,7 @@ padding:20px;
 border:2px dashed #00c9ff;
 background:#f5ffff;
 border-radius:10px;
-text-align:center;
 }
-
-.hidden{display:none;}
 
 .design{
 position:fixed;
@@ -101,35 +93,30 @@ font-weight:bold;
 
 <form id="form">
 
-<label>Student Name *</label>
+<label>Student Name <span class="star">*</span></label>
 <input id="name" required>
 
-<label>Father Name *</label>
+<label>Father Name <span class="star">*</span></label>
 <input id="father" required>
 
-<label>Mobile *</label>
+<label>Mobile <span class="star">*</span></label>
 <input id="mobile" required>
 
-<label>Address *</label>
+<label>Address <span class="star">*</span></label>
 <input id="address" required>
 
-<label>Aadhar *</label>
+<label>Aadhar <span class="star">*</span></label>
 <input id="aadhar" maxlength="14" required>
 
-<label>Class *</label>
+<label>Class <span class="star">*</span></label>
 <select id="class" required>
 <option value="">Select</option>
-<option>06</option>
-<option>07</option>
-<option>08</option>
-<option>09</option>
-<option>10</option>
-<option>11</option>
-<option>12</option>
+<option>06</option><option>07</option><option>08</option>
+<option>09</option><option>10</option><option>11</option><option>12</option>
 </select>
 
-<div id="streamBox" class="hidden">
-<label>Stream *</label>
+<div id="streamBox" style="display:none;">
+<label>Stream <span class="star">*</span></label>
 <select id="stream">
 <option value="">Select</option>
 <option>Science</option>
@@ -138,8 +125,8 @@ font-weight:bold;
 </select>
 </div>
 
-<div id="subjectBox" class="hidden">
-<label>Subject *</label>
+<div id="subjectBox" style="display:none;">
+<label>Subject <span class="star">*</span></label>
 <select id="subject">
 <option value="">Select</option>
 <option>Mathematics</option>
@@ -152,10 +139,10 @@ font-weight:bold;
 </select>
 </div>
 
-<label>Photo *</label>
+<label>Photo <span class="star">*</span></label>
 <input type="file" id="photo" required>
 
-<button type="button" onclick="payNow()">💳 Pay ₹500 Registration Fee</button>
+<button type="button" onclick="payNow()">💳 Pay ₹500</button>
 <p id="payStatus" class="status">❌ Payment Pending</p>
 
 <button type="submit">🚀 REGISTER STUDENT</button>
@@ -166,7 +153,7 @@ font-weight:bold;
 
 </div>
 
-<div class="design">Web Design by Marghubur Rahman💞💞</div>
+<div class="design">Web Design by Marghubur Rahman🌹🌹</div>
 
 <script>
 
@@ -174,84 +161,78 @@ font-weight:bold;
 let paymentDone=false;
 
 function payNow(){
-var options={
+new Razorpay({
 key:"rzp_live_SeTZG1tAB8E8uH",
-amount:500,
+amount:01,
 currency:"INR",
 name:"CE Campus",
 description:"Registration Fee",
-handler:function(response){
+handler:function(res){
 paymentDone=true;
-document.getElementById("payStatus").innerText="✅ Payment Successful: "+response.razorpay_payment_id;
+document.getElementById("payStatus").innerText="✅ Paid: "+res.razorpay_payment_id;
 alert("Payment Successful ✔");
 }
-};
-new Razorpay(options).open();
+}).open();
 }
 
 /* CLASS LOGIC */
-document.getElementById("class").addEventListener("change",function(){
-let c=this.value;
-if(c==="11"||c==="12"){
-document.getElementById("streamBox").style.display="block";
-}else{
-document.getElementById("streamBox").style.display="none";
-document.getElementById("subjectBox").style.display="none";
-}
-});
+class.onchange=function(){
+streamBox.style.display=(this.value==="11"||this.value==="12")?"block":"none";
+subjectBox.style.display="none";
+};
 
-document.getElementById("stream").addEventListener("change",function(){
-document.getElementById("subjectBox").style.display=this.value?"block":"none";
-});
+/* STREAM */
+stream.onchange=function(){
+subjectBox.style.display=this.value?"block":"none";
+};
 
-/* AADHAR */
-document.getElementById("aadhar").addEventListener("input",function(e){
+/* AADHAR FORMAT */
+aadhar.oninput=function(e){
 let v=e.target.value.replace(/\D/g,"").substring(0,12);
-let f=v;
-if(v.length>4) f=v.substring(0,4)+"-"+v.substring(4);
-if(v.length>8) f=v.substring(0,4)+"-"+v.substring(4,8)+"-"+v.substring(8);
-e.target.value=f;
-});
+e.target.value=v.replace(/(\d{4})(\d{4})(\d{0,4})/,"$1-$2-$3");
+};
 
 /* SUBMIT */
-document.getElementById("form").addEventListener("submit",function(e){
+form.onsubmit=function(e){
 e.preventDefault();
 
-if(!paymentDone){
-alert("❌ Please complete payment first");
+if(!paymentDone){alert("❌ Please complete payment first");return;}
+
+let file=photo.files[0];
+if(!file){alert("Upload photo");return;}
+
+let aadharVal=aadhar.value.replace(/-/g,"");
+if(!/^\d{12}$/.test(aadharVal)){
+alert("Invalid Aadhar");
 return;
 }
-
-let file=document.getElementById("photo").files[0];
-if(!file){alert("Upload photo");return;}
 
 let reader=new FileReader();
 
 reader.onload=function(e){
 
-let photo=e.target.result;
+let img=e.target.result;
 
 let data={
-name:document.getElementById("name").value,
-father:document.getElementById("father").value,
-mobile:document.getElementById("mobile").value,
-address:document.getElementById("address").value,
-class:document.getElementById("class").value,
-stream:document.getElementById("stream").value,
-subject:document.getElementById("subject").value,
-date:new Date().toLocaleString()
+Name:name.value,
+Father:father.value,
+Mobile:mobile.value,
+Address:address.value,
+Class:class.value,
+Stream:stream.value,
+Subject:subject.value,
+Date:new Date().toLocaleString()
 };
 
-alert("🎉 Welcome to CE Campus\nStudent: "+data.name);
+alert("🎉 Welcome to CE Campus\n"+data.Name);
 
 /* SLIP */
-document.getElementById("slip").innerHTML=`
+slip.innerHTML=`
 <div class="slip">
-<img src="Ce.JPEG" style="height:60px;"><br>
-<h2 style="color:#00c9ff;">CE CAMPUS REGISTRATION SLIP</h2>
-<p><b>Name:</b> ${data.name}</p>
-<p><b>Class:</b> ${data.class}</p>
-<img src="${photo}" style="width:120px;height:120px;border-radius:10px;">
+<img src="Ce.JPEG" height="60"><br>
+<h2 style="color:#00c9ff;">REGISTRATION SLIP</h2>
+${Object.entries(data).map(([k,v])=>`<p><b>${k}:</b> ${v}</p>`).join("")}
+<img src="${img}" width="120" style="border-radius:10px;">
 <br><br>
 <button onclick="window.print()">🖨️ PRINT</button>
 </div>`;
@@ -260,24 +241,38 @@ document.getElementById("slip").innerHTML=`
 const {jsPDF}=window.jspdf;
 let doc=new jsPDF();
 
+/* Header */
 doc.setFillColor(0,201,255);
-doc.rect(0,0,220,40,"F");
+doc.rect(0,0,210,30,"F");
 
-doc.setFontSize(20);
 doc.setTextColor(255,255,255);
-doc.text("CE CAMPUS",80,20);
+doc.setFontSize(18);
+doc.text("CATALYST EDUCATIONAL CAMPUS ADMISSION",50,20);
 
+/* Body */
 doc.setTextColor(0,0,0);
-doc.text("Name: "+data.name,20,70);
+doc.setFontSize(12);
 
-doc.addImage(photo,"JPEG",140,60,50,50);
+let y=50;
+Object.entries(data).forEach(([k,v])=>{
+doc.text(`${k}: ${v}`,20,y);
+y+=10;
+});
 
-doc.save(data.name+"_Registration Form.pdf");
+/* Photo */
+doc.addImage(img,"JPEG",140,50,50,50);
+
+/* Border */
+doc.rect(10,40,190,240);
+
+/* Save */
+doc.save(data.Name+"_Admission.pdf");
 
 };
 
 reader.readAsDataURL(file);
-});
+};
+
 </script>
 
 </body>

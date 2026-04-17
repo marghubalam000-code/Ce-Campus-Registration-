@@ -1,9 +1,10 @@
-<MARGHUBUR RAHMAN>
+<Marghub07_dz>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>CE Campus Admission System</title>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
@@ -59,6 +60,12 @@ cursor:pointer;
 background:linear-gradient(90deg,#00c9ff,#92fe9d);
 }
 
+.status{
+text-align:center;
+font-weight:bold;
+margin-top:10px;
+}
+
 .slip{
 margin-top:20px;
 padding:20px;
@@ -87,29 +94,29 @@ font-weight:bold;
 
 <div class="header">
 <img src="Ce.JPEG">
-🎓 CATALYST EDUCATIONAL CAMPUS - REGISTRATION PORTAL
+🎓 CATALYST EDUCATIONAL CAMPUS - ADMISSION PORTAL
 </div>
 
 <div class="container">
 
 <form id="form">
 
-<label>Student Name <span class="star">*</span></label>
+<label>Student Name *</label>
 <input id="name" required>
 
-<label>Father Name <span class="star">*</span></label>
+<label>Father Name *</label>
 <input id="father" required>
 
-<label>Mobile <span class="star">*</span></label>
+<label>Mobile *</label>
 <input id="mobile" required>
 
-<label>Address <span class="star">*</span></label>
+<label>Address *</label>
 <input id="address" required>
 
-<label>Aadhar <span class="star">*</span></label>
+<label>Aadhar *</label>
 <input id="aadhar" maxlength="14" required>
 
-<label>Class <span class="star">*</span></label>
+<label>Class *</label>
 <select id="class" required>
 <option value="">Select</option>
 <option>06</option>
@@ -122,7 +129,7 @@ font-weight:bold;
 </select>
 
 <div id="streamBox" class="hidden">
-<label>Stream <span class="star">*</span></label>
+<label>Stream *</label>
 <select id="stream">
 <option value="">Select</option>
 <option>Science</option>
@@ -132,7 +139,7 @@ font-weight:bold;
 </div>
 
 <div id="subjectBox" class="hidden">
-<label>Subject <span class="star">*</span></label>
+<label>Subject *</label>
 <select id="subject">
 <option value="">Select</option>
 <option>Mathematics</option>
@@ -145,8 +152,11 @@ font-weight:bold;
 </select>
 </div>
 
-<label>Photo <span class="star">*</span></label>
+<label>Photo *</label>
 <input type="file" id="photo" required>
+
+<button type="button" onclick="payNow()">💳 Pay ₹500 Registration Fee</button>
+<p id="payStatus" class="status">❌ Payment Pending</p>
 
 <button type="submit">🚀 REGISTER STUDENT</button>
 
@@ -156,9 +166,28 @@ font-weight:bold;
 
 </div>
 
-<div class="design">Web Design by Marghubur Rahman</div>
+<div class="design">Web Design by Marghubur Rahman💞💞</div>
 
 <script>
+
+/* PAYMENT */
+let paymentDone=false;
+
+function payNow(){
+var options={
+key:"rzp_live_SeTZG1tAB8E8uH",
+amount:500,
+currency:"INR",
+name:"CE Campus",
+description:"Registration Fee",
+handler:function(response){
+paymentDone=true;
+document.getElementById("payStatus").innerText="✅ Payment Successful: "+response.razorpay_payment_id;
+alert("Payment Successful ✔");
+}
+};
+new Razorpay(options).open();
+}
 
 /* CLASS LOGIC */
 document.getElementById("class").addEventListener("change",function(){
@@ -171,12 +200,11 @@ document.getElementById("subjectBox").style.display="none";
 }
 });
 
-/* STREAM */
 document.getElementById("stream").addEventListener("change",function(){
 document.getElementById("subjectBox").style.display=this.value?"block":"none";
 });
 
-/* AADHAR FORMAT + VALIDATION */
+/* AADHAR */
 document.getElementById("aadhar").addEventListener("input",function(e){
 let v=e.target.value.replace(/\D/g,"").substring(0,12);
 let f=v;
@@ -189,14 +217,13 @@ e.target.value=f;
 document.getElementById("form").addEventListener("submit",function(e){
 e.preventDefault();
 
-let file=document.getElementById("photo").files[0];
-if(!file){alert("Upload photo");return;}
-
-let aadhar=document.getElementById("aadhar").value.replace(/-/g,"");
-if(!/^\d{12}$/.test(aadhar)){
-alert("Invalid Aadhar Number");
+if(!paymentDone){
+alert("❌ Please complete payment first");
 return;
 }
+
+let file=document.getElementById("photo").files[0];
+if(!file){alert("Upload photo");return;}
 
 let reader=new FileReader();
 
@@ -220,63 +247,32 @@ alert("🎉 Welcome to CE Campus\nStudent: "+data.name);
 /* SLIP */
 document.getElementById("slip").innerHTML=`
 <div class="slip">
-
 <img src="Ce.JPEG" style="height:60px;"><br>
 <h2 style="color:#00c9ff;">CE CAMPUS REGISTRATION SLIP</h2>
-
 <p><b>Name:</b> ${data.name}</p>
-<p><b>Father:</b> ${data.father}</p>
 <p><b>Class:</b> ${data.class}</p>
-<p><b>Stream:</b> ${data.stream}</p>
-<p><b>Subject:</b> ${data.subject}</p>
-<p><b>Mobile:</b> ${data.mobile}</p>
-
-<img src="${photo}" style="width:120px;height:120px;border-radius:10px;border:2px solid #00c9ff;">
-
+<img src="${photo}" style="width:120px;height:120px;border-radius:10px;">
 <br><br>
 <button onclick="window.print()">🖨️ PRINT</button>
-
 </div>`;
 
-/* PROFESSIONAL PDF */
+/* PDF */
 const {jsPDF}=window.jspdf;
 let doc=new jsPDF();
 
-let logo=new Image();
-logo.src="Ce.JPEG";
-
-logo.onload=function(){
-
 doc.setFillColor(0,201,255);
 doc.rect(0,0,220,40,"F");
-
-doc.addImage(logo,"JPEG",10,5,30,30);
 
 doc.setFontSize(20);
 doc.setTextColor(255,255,255);
 doc.text("CE CAMPUS",80,20);
 
 doc.setTextColor(0,0,0);
-doc.setFontSize(14);
-doc.text("ADMISSION CERTIFICATE",65,35);
-
-doc.rect(10,50,190,230);
-
-doc.setFontSize(12);
 doc.text("Name: "+data.name,20,70);
-doc.text("Father: "+data.father,20,80);
-doc.text("Class: "+data.class,20,90);
-doc.text("Stream: "+data.stream,20,100);
-doc.text("Subject: "+data.subject,20,110);
-doc.text("Mobile: "+data.mobile,20,120);
-doc.text("Address: "+data.address,20,130);
-doc.text("Date: "+data.date,20,140);
 
 doc.addImage(photo,"JPEG",140,60,50,50);
 
-doc.save(data.name+"_CE_Certificate.pdf");
-
-};
+doc.save(data.name+"_Registration Form.pdf");
 
 };
 

@@ -142,7 +142,7 @@ font-weight:bold;
 
 </div>
 
-<div class="design">Web Design by Marghubur Rahman</div>
+<div class="design">Design by Marghubur Rahman</div>
 
 <script>
 

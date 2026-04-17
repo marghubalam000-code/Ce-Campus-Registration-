@@ -85,7 +85,7 @@ font-weight:bold;
 <body>
 
 <div class="header">
-<img src="Download/C.JPEG">
+<img src="Phone/Download/C.JPEG">
 🎓 CATALYST EDUCATIONAL CAMPUS - ADMISSION PORTAL
 </div>
 
